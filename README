@@ -1,0 +1,22 @@
+PHP ErrorNot
+============
+
+Php notifier for ErrorNot
+http://github.com/AF83/ErrorNot
+
+Requirements
+============
+
+* Http_Request2
+* simpletest for launching tests
+
+Usage
+=====
+
+$e = new ErrorNot('http://example.net/', 'my-api-key');
+$e->notify('big error', '2010-01-01');
+
+Author
+======
+
+François de Metz <francois@2metz.fr>
