@@ -1,3 +1,4 @@
+============
 PHP ErrorNot
 ============
 
@@ -5,13 +6,13 @@ Php notifier for ErrorNot
 http://github.com/AF83/ErrorNot
 
 Requirements
-------------
+============
 
 * PHP 5 >= 5.2.0
 * Http_Request2 (http://pear.php.net/package/HTTP_Request2)
 
 Usage
------
+=====
 
 $e = new ErrorNot('http://example.net/', 'my-api-key');
 $e->notify('big error', '2010-01-01');
@@ -40,7 +41,7 @@ $e = new ErrorNot('http://example.net/', 'my-api-key', true);
 set_exception_handler('my_exception_handler'); // not ok
 
 TESTS
------
+=====
 
 * simpletest for launching tests (http://www.simpletest.org/)
 
@@ -53,6 +54,6 @@ Test cases run: 2/2, Passes: 8, Failures: 0, Exceptions: 0
 
 
 Author
-------
+======
 
 François de Metz <francois@2metz.fr>
