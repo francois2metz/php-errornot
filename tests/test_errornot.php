@@ -1,35 +1,15 @@
 <?php
 
 require_once 'simpletest/autorun.php';
-require_once '../errornot.php';
 require_once 'HTTP/Request2.php';
-require_once 'HTTP/Request2/Adapter/Mock.php';
-
-class MyMockAdapter extends Http_Request2_Adapter_Mock
-{
-    protected $request;
-    public function sendRequest(HTTP_Request2 $request)
-    {
-        $this->request = $request;
-        return parent::sendRequest($request);
-    }
-
-    public function getRequest()
-    {
-        return $this->request;
-    }
-}
+require_once dirname(__FILE__).'/../errornot.php';
+require_once 'mock.php';
 
 class TestErrorNot extends UnitTestCase
 {
     protected function createMockRequest($response, $adapter_name = 'Http_Request2_Adapter_Mock')
     {
-        $mock_network = new $adapter_name();
-        $response_file = fopen(dirname(__FILE__).'/responses/'. $response, 'r');
-        $this->assertTrue($response_file !== false, 'cannot open responses/'. $response);
-        $mock_network->addResponse($response_file);
-        fclose($response_file);
-        return $mock_network;
+        return createMockRequest($response, $adapter_name);
     }
 
     public function testSendRequestOk()
@@ -78,5 +58,24 @@ class TestErrorNot extends UnitTestCase
                                                   'request' => array('url' => 'http://example.net/'),
                                                   'environment' => array('PATH_INFO' => '/'),
                                                   'data' => array('mydata1', 'mydata2'))), json_decode($mock_network->getRequest()->getBody(), true));
+    }
+}
+
+class TestErrorNotExceptionHandler extends UnitTestCase
+{
+    public function testInstallExceptionHandler()
+    {
+        $cmd = '/usr/bin/php '. dirname(__FILE__) .'/test_cli_simple_exception_handler.php';
+        $return_value = -1;
+        passthru($cmd, $return_value);
+        $this->assertEqual(2, $return_value);
+    }
+
+    public function testExceptionHandlerDontOverridePreviousOne()
+    {
+        $cmd = '/usr/bin/php '. dirname(__FILE__) .'/test_cli_previous_exception_handler.php';
+        $return_value = -1;
+        passthru($cmd, $return_value);
+        $this->assertEqual(3, $return_value);
     }
 }

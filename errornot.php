@@ -23,20 +23,25 @@ class ErrorNot
 
     protected $api_key;
 
-    protected $version;
+    protected $version = '0.1.0';
 
     protected $adapter = null;
+
+    private $previous_exception_handler = null;
     /**
      * Create a new notifier
      * @param String $url url of errornot instance
      * @param String $api_key
-     * @param String $version
+     * @param boolean $install_exception_handler
      */
-    public function __construct($url, $api_key, $version = '0.1.0')
+    public function __construct($url, $api_key, $install_exception_handler = false)
     {
         $this->url     = $url;
         $this->api_key = $api_key;
-        $this->version = $version;
+        if ($install_exception_handler)
+        {
+            $this->installExceptionHandler();
+        }
     }
     /**
      * Set HTTP_Request2 Adapter
@@ -46,6 +51,16 @@ class ErrorNot
     {
         $this->adapter = $http_request2_adapter;
     }
+
+    public function notifyException(Exception $exception)
+    {
+        $this->notify($exception->getMessage(), '', $exception->getTrace());
+        if (!is_null($this->previous_exception_handler))
+        {
+            call_user_func($this->previous_exception_handler, $exception);
+        }
+    }
+
     /**
      * Notify a new error
      * @param String $message
@@ -85,5 +100,10 @@ class ErrorNot
         {
             return false;
         }
+    }
+
+    public function installExceptionHandler()
+    {
+        $this->previous_exception_handler = set_exception_handler(array($this, 'notifyException'));
     }
 }
