@@ -28,6 +28,7 @@ class ErrorNot
     protected $adapter = null;
 
     private $previous_exception_handler = null;
+
     /**
      * Create a new notifier
      * @param String $url url of errornot instance
@@ -43,6 +44,7 @@ class ErrorNot
             $this->installExceptionHandler();
         }
     }
+
     /**
      * Set HTTP_Request2 Adapter
      * Useful for unit testing
@@ -52,6 +54,10 @@ class ErrorNot
         $this->adapter = $http_request2_adapter;
     }
 
+    /**
+     * Notify Exception
+     * @param Exception $exception
+     */
     public function notifyException(Exception $exception)
     {
         $this->notify($exception->getMessage(), '', $exception->getTrace());
@@ -71,22 +77,22 @@ class ErrorNot
      * @param array $data
      * @return boolean
      */
-    public function notify($message, $raised_at, $backtrace = null, $request = null, $environnement = null, $data = null)
+    public function notify($message, $raised_at, $backtrace = array(), $request = null, $environnement = null, $data = null)
     {
         $http_request = new HTTP_Request2($this->url . '/errors/', HTTP_Request2::METHOD_POST);
         if (!is_null($this->adapter))
         {
             $http_request->setAdapter($this->adapter);
         }
-        $body = array('api_key' => $this->api_key,
-                      'version' => $this->version,
-                      'error'   => array('message'     => $message,
-                                         'raised_at'   => $raised_at,
-                                         'backtrace'   => $backtrace,
-                                         'request'     => $request,
-                                         'environment' => $environnement,
-                                         'data'        => $data));
-        $http_request->setBody(json_encode($body));
+        $http_request->addPostParameter('api_key', $this->api_key);
+        $http_request->addPostParameter('version', $this->version);
+        $http_request->addPostParameter('error', array('message'     => $message,
+                                                       'raised_at'   => $raised_at,
+                                                       'backtrace' => $backtrace,
+                                                       'request' => $request,
+                                                       'environment' => $environnement,
+                                                       'data' => $data));
+        
         try
         {
             $response = $http_request->send();
@@ -102,6 +108,11 @@ class ErrorNot
         }
     }
 
+    /**
+     * Install exception handler
+     * Handler not caught exceptions
+     * Preserve previous exception handler
+     */
     public function installExceptionHandler()
     {
         $this->previous_exception_handler = set_exception_handler(array($this, 'notifyException'));

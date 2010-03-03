@@ -8,7 +8,7 @@ http://github.com/AF83/ErrorNot
 Requirements
 ============
 
-* PHP 5 >= 5.2.0
+* PHP 5
 * Http_Request2 (http://pear.php.net/package/HTTP_Request2)
 
 Usage
@@ -39,6 +39,8 @@ $e = new ErrorNot('http://example.net/', 'my-api-key', true);
 
 $e = new ErrorNot('http://example.net/', 'my-api-key', true);
 set_exception_handler('my_exception_handler'); // not ok
+
+$e->installExceptionHandler(); // or reinstall exception handler
 
 TESTS
 =====

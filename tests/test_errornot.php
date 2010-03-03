@@ -28,36 +28,24 @@ class TestErrorNot extends UnitTestCase
         $this->assertFalse($errornot->notify('my message', 'raised_at'), 'should be not ok');
     }
 
-    public function testJsonParam()
+    public function testPostParams()
     {
         $mock_network = $this->createMockRequest('test_ok.txt', 'MyMockAdapter');
         $errornot = new ErrorNot('http://localhost:3000/', 'test-key');
         $errornot->setNetworkAdapter($mock_network);
         $this->assertTrue($errornot->notify('my message', 'raised_at'), 'should be ok');
-        $this->assertEqual(array('api_key' => 'test-key',
-                                 'version' => '0.1.0',
-                                 'error' => array('message' => 'my message',
-                                                  'raised_at' => 'raised_at',
-                                                  'backtrace' => null,
-                                                  'request' => null,
-                                                  'environment' => null,
-                                                  'data' => null)), json_decode($mock_network->getRequest()->getBody(), true));
+        $this->assertEqual('api_key=test-key&version=0.1.0&error[message]=my message&error[raised_at]=raised_at', urldecode($mock_network->getRequest()->getBody()));
     }
 
-    public function testJsonParamWithExtraParam()
+    public function testPostExtraParams()
     {
         $mock_network = $this->createMockRequest('test_ok.txt', 'MyMockAdapter');
         $errornot = new ErrorNot('http://localhost:3000/', 'test-key');
         $errornot->setNetworkAdapter($mock_network);
         $this->assertTrue($errornot->notify('my message', 'raised_at', array('test'), array('url' => 'http://example.net/'), array('PATH_INFO' => '/'), array('mydata1', 'mydata2')), 'should be ok');
-        $this->assertEqual(array('api_key' => 'test-key',
-                                 'version' => '0.1.0',
-                                 'error' => array('message' => 'my message',
-                                                  'raised_at' => 'raised_at',
-                                                  'backtrace' => array('test'),
-                                                  'request' => array('url' => 'http://example.net/'),
-                                                  'environment' => array('PATH_INFO' => '/'),
-                                                  'data' => array('mydata1', 'mydata2'))), json_decode($mock_network->getRequest()->getBody(), true));
+        $this->assertEqual('api_key=test-key&version=0.1.0&error[message]=my message&error[raised_at]=raised_at&'.
+                           'error[backtrace][0]=test&error[request][url]=http://example.net/&error[environment][PATH_INFO]=/'.
+                           '&error[data][0]=mydata1&error[data][1]=mydata2', urldecode($mock_network->getRequest()->getBody()));
     }
 }
 
