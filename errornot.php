@@ -77,12 +77,16 @@ class ErrorNot
      * @param array $data
      * @return boolean
      */
-    public function notify($message, $raised_at, $backtrace = array(), $request = null, $environnement = null, $data = null)
+    public function notify($message, $raised_at = null, $backtrace = array(), $request = null, $environnement = null, $data = null)
     {
         $http_request = new HTTP_Request2($this->url . '/errors/', HTTP_Request2::METHOD_POST);
         if (!is_null($this->adapter))
         {
             $http_request->setAdapter($this->adapter);
+        }
+        if (is_null($raised_at))
+        {
+            $raised_at = date('c');
         }
         $http_request->addPostParameter('api_key', $this->api_key);
         $http_request->addPostParameter('version', $this->version);

@@ -37,6 +37,15 @@ class TestErrorNot extends UnitTestCase
         $this->assertEqual('api_key=test-key&version=0.1.0&error[message]=my message&error[raised_at]=raised_at', urldecode($mock_network->getRequest()->getBody()));
     }
 
+    public function testSetAutoNow()
+    {
+        $mock_network = $this->createMockRequest('test_ok.txt', 'MyMockAdapter');
+        $errornot = new ErrorNot('http://localhost:3000/', 'test-key');
+        $errornot->setNetworkAdapter($mock_network);
+        $this->assertTrue($errornot->notify('my message'), 'should be ok');
+        $this->assertEqual('api_key=test-key&version=0.1.0&error[message]=my message&error[raised_at]='.date('c'), urldecode($mock_network->getRequest()->getBody()));
+    }
+
     public function testPostExtraParams()
     {
         $mock_network = $this->createMockRequest('test_ok.txt', 'MyMockAdapter');

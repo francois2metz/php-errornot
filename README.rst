@@ -15,7 +15,8 @@ Usage
 =====
 
 $e = new ErrorNot('http://example.net/', 'my-api-key');
-$e->notify('big error', '2010-01-01');
+$e->notify('big error');
+$e->notify('big error', '2010-03-03T00:00:42+01:00');
 
 ErrorNot can install a custom exception handler:
 

@@ -1,4 +1,3 @@
-* set raised_at to now by default
 * manage 422 error code from API
 * pear package
 * rename to Services_ErrorNot
