@@ -7,10 +7,10 @@ require_once 'mock.php';
 
 class TestErrorNot extends UnitTestCase
 {
-    protected function createMockRequest($url = 'http://localhost:3000/', $response_file = 'test_ok.txt', $adapter_name = 'MyMockAdapter')
+    protected function createMockRequest($url = 'http://localhost:3000/', $response_file = 'test_ok.txt')
     {
         $errornot = new ErrorNot($url, 'test-key');
-        $mock_network = createMockRequest($response_file, $adapter_name);
+        $mock_network = createMockRequest($response_file, 'MyMockAdapter');
         $errornot->setNetworkAdapter($mock_network);
         return array($errornot, $mock_network);
     }
@@ -57,6 +57,17 @@ class TestErrorNot extends UnitTestCase
         $this->assertEqual('api_key=test-key&version=0.1.0&error[message]=my message&error[raised_at]=raised_at&'.
                            'error[backtrace][0]=test&error[request][url]=http://example.net/&error[environment][PATH_INFO]=/'.
                            '&error[data][0]=mydata1&error[data][1]=mydata2', urldecode($mock_network->getRequest()->getBody()));
+    }
+
+    public function testNotifyExceptionWithEnvironment()
+    {
+        list($errornot, $mock_network) = $this->createMockRequest();
+        try {
+            throw new Exception('message exception');
+        } catch (Exception $e)  {
+            $errornot->notifyException($e);
+        }
+        $this->assertNotNull($mock_network->getRequest());
     }
 }
 

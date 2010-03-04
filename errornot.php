@@ -63,7 +63,12 @@ class ErrorNot
      */
     public function notifyException(Exception $exception)
     {
-        $this->notify($exception->getMessage(), '', $exception->getTrace());
+        $this->notify($exception->getMessage(),
+                      null, // auto now
+                      $exception->getTrace(),
+                      array('params' => array('post' => $_POST, 'get' => $_GET, 'cookies' => $_COOKIE)),
+                      $_SERVER,
+                      isset($_SESSION) ? $_SESSION : '');
         if (!is_null($this->previous_exception_handler))
         {
             call_user_func($this->previous_exception_handler, $exception);
@@ -99,7 +104,7 @@ class ErrorNot
                                                        'request'     => $request,
                                                        'environment' => $environnement,
                                                        'data'        => $data));
-        
+
         try
         {
             $response = $http_request->send();

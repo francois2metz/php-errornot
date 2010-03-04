@@ -4,7 +4,7 @@ require_once 'HTTP/Request2/Adapter/Mock.php';
 
 class MyMockAdapter extends Http_Request2_Adapter_Mock
 {
-    protected $request;
+    protected $request = null;
 
     protected $nb_request = 0;
 
