@@ -59,4 +59,4 @@ Test cases run: 2/2, Passes: 8, Failures: 0, Exceptions: 0
 Author
 ======
 
-François de Metz <francois@2metz.fr>
+Francois de Metz <francois@2metz.fr>
