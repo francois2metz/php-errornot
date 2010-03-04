@@ -14,10 +14,21 @@ class TestErrorNot extends UnitTestCase
 
     public function testSendRequestOk()
     {
-        $mock_network = $this->createMockRequest('test_ok.txt');
+        $mock_network = $this->createMockRequest('test_ok.txt', 'MyMockAdapter');
+        $errornot = new ErrorNot('http://localhost:3000', 'test');
+        $errornot->setNetworkAdapter($mock_network);
+        $this->assertTrue($errornot->notify('my message', 'raised_at'), 'should be ok');
+        $this->assertEqual($mock_network->getRequest()->getUrl()->getUrl(), 'http://localhost:3000/errors/');
+        $this->assertEqual($mock_network->getRequest()->getMethod(), 'POST');
+    }
+
+    public function testSendRequestUrlWithEndSlash()
+    {
+        $mock_network = $this->createMockRequest('test_ok.txt', 'MyMockAdapter');
         $errornot = new ErrorNot('http://localhost:3000/', 'test');
         $errornot->setNetworkAdapter($mock_network);
         $this->assertTrue($errornot->notify('my message', 'raised_at'), 'should be ok');
+        $this->assertEqual($mock_network->getRequest()->getUrl()->getUrl(), 'http://localhost:3000/errors/');
     }
 
     public function testSendRequestError()

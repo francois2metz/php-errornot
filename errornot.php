@@ -82,7 +82,7 @@ class ErrorNot
      */
     public function notify($message, $raised_at = null, $backtrace = array(), $request = null, $environnement = null, $data = null)
     {
-        $http_request = new HTTP_Request2($this->url . '/errors/', HTTP_Request2::METHOD_POST);
+        $http_request = new HTTP_Request2($this->formatUrl() , HTTP_Request2::METHOD_POST);
         if (!is_null($this->adapter))
         {
             $http_request->setAdapter($this->adapter);
@@ -95,10 +95,10 @@ class ErrorNot
         $http_request->addPostParameter('version', $this->version);
         $http_request->addPostParameter('error', array('message'     => $message,
                                                        'raised_at'   => $raised_at,
-                                                       'backtrace' => $backtrace,
-                                                       'request' => $request,
+                                                       'backtrace'   => $backtrace,
+                                                       'request'     => $request,
                                                        'environment' => $environnement,
-                                                       'data' => $data));
+                                                       'data'        => $data));
         
         try
         {
@@ -123,5 +123,10 @@ class ErrorNot
     public function installExceptionHandler()
     {
         $this->previous_exception_handler = set_exception_handler(array($this, 'notifyException'));
+    }
+
+    protected function formatUrl()
+    {
+        return $this->url . (($this->url[strlen($this->url) - 1] == '/') ? '' : '/') . 'errors/';
     }
 }
