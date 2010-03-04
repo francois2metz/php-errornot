@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ErrorNot" default="test">
+
+    <target name="test">
+        <phplint>
+            <fileset dir=".">
+                <include name="**/*.php"/>
+                <exclude name="tests/simpletest/"/>
+            </fileset>
+        </phplint>
+        <simpletest debug="true">
+            <formatter type="plain" usefile="false"/>
+            <fileset dir="tests">
+                <include name="test_**.php"/>
+                <exclude name="test_cli_**.php"/>
+            </fileset>
+        </simpletest>
+    </target>
+
+</project>
