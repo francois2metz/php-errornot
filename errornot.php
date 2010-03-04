@@ -17,6 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @package ErrorNot
+ */
 class ErrorNot
 {
     protected $url;
@@ -32,7 +35,7 @@ class ErrorNot
     /**
      * Create a new notifier
      * @param String $url url of errornot instance
-     * @param String $api_key
+     * @param String $api_key api key of project
      * @param boolean $install_exception_handler
      */
     public function __construct($url, $api_key, $install_exception_handler = false)
@@ -70,7 +73,7 @@ class ErrorNot
     /**
      * Notify a new error
      * @param String $message
-     * @param Date $raised_at
+     * @param Date $raised_at UTC date
      * @param array $backtrace
      * @param array $request
      * @param array $environnement
