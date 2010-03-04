@@ -7,61 +7,52 @@ require_once 'mock.php';
 
 class TestErrorNot extends UnitTestCase
 {
-    protected function createMockRequest($response, $adapter_name = 'Http_Request2_Adapter_Mock')
+    protected function createMockRequest($url = 'http://localhost:3000/', $response_file = 'test_ok.txt', $adapter_name = 'MyMockAdapter')
     {
-        return createMockRequest($response, $adapter_name);
+        $errornot = new ErrorNot($url, 'test-key');
+        $mock_network = createMockRequest($response_file, $adapter_name);
+        $errornot->setNetworkAdapter($mock_network);
+        return array($errornot, $mock_network);
     }
 
     public function testSendRequestOk()
     {
-        $mock_network = $this->createMockRequest('test_ok.txt', 'MyMockAdapter');
-        $errornot = new ErrorNot('http://localhost:3000', 'test');
-        $errornot->setNetworkAdapter($mock_network);
+        list($errornot, $mock_network) = $this->createMockRequest();
         $this->assertTrue($errornot->notify('my message', 'raised_at'), 'should be ok');
         $this->assertEqual($mock_network->getRequest()->getUrl()->getUrl(), 'http://localhost:3000/errors/');
         $this->assertEqual($mock_network->getRequest()->getMethod(), 'POST');
     }
 
-    public function testSendRequestUrlWithEndSlash()
+    public function testSendRequestUrlWithoutEndSlash()
     {
-        $mock_network = $this->createMockRequest('test_ok.txt', 'MyMockAdapter');
-        $errornot = new ErrorNot('http://localhost:3000/', 'test');
-        $errornot->setNetworkAdapter($mock_network);
+        list($errornot, $mock_network) = $this->createMockRequest('http://localhost:3000');
         $this->assertTrue($errornot->notify('my message', 'raised_at'), 'should be ok');
         $this->assertEqual($mock_network->getRequest()->getUrl()->getUrl(), 'http://localhost:3000/errors/');
     }
 
     public function testSendRequestError()
     {
-        $mock_network = $this->createMockRequest('test_404.txt');
-        $errornot = new ErrorNot('http://localhost:3000/', 'test');
-        $errornot->setNetworkAdapter($mock_network);
+        list($errornot, $mock_network) = $this->createMockRequest('http://localhost:3000/', 'test_404.txt');
         $this->assertFalse($errornot->notify('my message', 'raised_at'), 'should be not ok');
     }
 
     public function testPostParams()
     {
-        $mock_network = $this->createMockRequest('test_ok.txt', 'MyMockAdapter');
-        $errornot = new ErrorNot('http://localhost:3000/', 'test-key');
-        $errornot->setNetworkAdapter($mock_network);
+        list($errornot, $mock_network) = $this->createMockRequest();
         $this->assertTrue($errornot->notify('my message', 'raised_at'), 'should be ok');
         $this->assertEqual('api_key=test-key&version=0.1.0&error[message]=my message&error[raised_at]=raised_at', urldecode($mock_network->getRequest()->getBody()));
     }
 
     public function testSetAutoNow()
     {
-        $mock_network = $this->createMockRequest('test_ok.txt', 'MyMockAdapter');
-        $errornot = new ErrorNot('http://localhost:3000/', 'test-key');
-        $errornot->setNetworkAdapter($mock_network);
+        list($errornot, $mock_network) = $this->createMockRequest();
         $this->assertTrue($errornot->notify('my message'), 'should be ok');
         $this->assertEqual('api_key=test-key&version=0.1.0&error[message]=my message&error[raised_at]='.date('c'), urldecode($mock_network->getRequest()->getBody()));
     }
 
     public function testPostExtraParams()
     {
-        $mock_network = $this->createMockRequest('test_ok.txt', 'MyMockAdapter');
-        $errornot = new ErrorNot('http://localhost:3000/', 'test-key');
-        $errornot->setNetworkAdapter($mock_network);
+        list($errornot, $mock_network) = $this->createMockRequest();
         $this->assertTrue($errornot->notify('my message', 'raised_at', array('test'), array('url' => 'http://example.net/'), array('PATH_INFO' => '/'), array('mydata1', 'mydata2')), 'should be ok');
         $this->assertEqual('api_key=test-key&version=0.1.0&error[message]=my message&error[raised_at]=raised_at&'.
                            'error[backtrace][0]=test&error[request][url]=http://example.net/&error[environment][PATH_INFO]=/'.
