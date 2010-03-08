@@ -18,9 +18,9 @@
  */
 
 /**
- * @package ErrorNot
+ * @package Services_ErrorNot
  */
-class ErrorNot
+class Services_ErrorNot
 {
     protected $url;
 
