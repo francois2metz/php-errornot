@@ -16,7 +16,7 @@ Usage
 
 ::
 
-        $e = new ErrorNot('http://example.net/', 'my-api-key');
+        $e = new Services_ErrorNot('http://example.net/', 'my-api-key');
         $e->notify('big error');
         $e->notify('big error', '2010-03-03T00:00:42+01:00');
 
@@ -24,7 +24,7 @@ ErrorNot can install a custom exception handler:
 
 ::
 
-        $e = new ErrorNot('http://example.net/', 'my-api-key', true);
+        $e = new Services_ErrorNot('http://example.net/', 'my-api-key', true);
 
 Be carefull about exception handler.
 
@@ -41,9 +41,9 @@ ErrorNot will save your previous custom exception handler.
         }
 
         set_exception_handler('my_exception_handler'); // ok
-        $e = new ErrorNot('http://example.net/', 'my-api-key', true);
+        $e = new Services_ErrorNot('http://example.net/', 'my-api-key', true);
 
-        $e = new ErrorNot('http://example.net/', 'my-api-key', true);
+        $e = new Services_ErrorNot('http://example.net/', 'my-api-key', true);
         set_exception_handler('my_exception_handler'); // not ok
 
         $e->installExceptionHandler(); // or reinstall exception handler
