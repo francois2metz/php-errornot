@@ -1,8 +1,10 @@
 <?php
 /**
- * ErrorNot Notifier http://github.com/AF83/ErrorNot
- * Copyright (C) 2010  François de Metz
+ * ErrorNot Notifier http://github.com/errornot/ErrorNot
+ * Copyright (C) 2010 François de Metz
  *
+ * PHP version 5
+ * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -15,6 +17,9 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * @author François de Metz <francois@2metz.fr>
+ * @license http://www.gnu.org/copyleft/lesser.html  LGPL License 3
  */
 
 /**
