@@ -102,3 +102,8 @@ Author
 ======
 
 Francois de Metz <francois@2metz.fr>
+
+License
+=======
+
+LGPL v3
