@@ -65,15 +65,17 @@ class Services_ErrorNot
     /**
      * Notify Exception
      * @param Exception $exception
+     * @params mixed $extradata optional extra data
      */
-    public function notifyException(Exception $exception)
+    public function notifyException(Exception $exception, $extradata = null)
     {
+        $data = array('extra' => $extradata);
+        isset($_SESSION) ? $data['session'] = $_SESSION : '';
         $this->notify($exception->getMessage(),
                       null, // auto now
                       $exception->getTrace(),
                       array('params' => array('post' => $_POST, 'get' => $_GET, 'cookies' => $_COOKIE)),
-                      $_SERVER,
-                      isset($_SESSION) ? $_SESSION : '');
+                      $_SERVER, $data);
         if (!is_null($this->previous_exception_handler))
         {
             call_user_func($this->previous_exception_handler, $exception);

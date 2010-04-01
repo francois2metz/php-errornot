@@ -16,9 +16,18 @@ Usage
 
 ::
 
-        $e = new Services_ErrorNot('http://example.net/', 'my-api-key');
-        $e->notify('big error');
-        $e->notify('big error', '2010-03-03T00:00:42+01:00');
+        $errornot = new Services_ErrorNot('http://example.net/', 'my-api-key');
+        $errornot->notify('big error');
+        $errornot->notify('big error', '2010-03-03T00:00:42+01:00');
+        try 
+        {
+
+        }
+        catch (MyException $e)
+        {
+           errornot->notifyException($e); // send specific exception
+           errornot->notifyException($e, 'foo'); // send specific exception with extra data
+        }       
 
 ErrorNot can install a custom exception handler:
 
@@ -59,7 +68,7 @@ TESTS
         $> php tests/test_errornot.php 
         test_errornot.php
         OK
-        Test cases run: 2/2, Passes: 8, Failures: 0, Exceptions: 0
+        Test cases run: 2/2, Passes: 16, Failures: 0, Exceptions: 0
 
 
 Author

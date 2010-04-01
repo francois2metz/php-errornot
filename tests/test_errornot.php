@@ -59,7 +59,7 @@ class TestErrorNot extends UnitTestCase
                            '&error[data][0]=mydata1&error[data][1]=mydata2', urldecode($mock_network->getRequest()->getBody()));
     }
 
-    public function testNotifyExceptionWithEnvironment()
+    public function testNotifyException()
     {
         list($errornot, $mock_network) = $this->createMockRequest();
         try {
@@ -68,6 +68,18 @@ class TestErrorNot extends UnitTestCase
             $errornot->notifyException($e);
         }
         $this->assertNotNull($mock_network->getRequest());
+    }
+
+    public function testNotifyExceptionWithData()
+    {
+        $_SERVER = array();
+        list($errornot, $mock_network) = $this->createMockRequest();
+        try {
+            throw new Exception('message exception');
+        } catch (Exception $e)  {
+            $errornot->notifyException($e, 'foo');
+        }
+        $this->assertPattern('/error\[data\]\[extra\]=foo$/', urldecode($mock_network->getRequest()->getBody()));
     }
 }
 
