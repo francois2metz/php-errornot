@@ -3,7 +3,7 @@ PHP ErrorNot
 ============
 
 Php notifier for ErrorNot
-http://github.com/AF83/ErrorNot
+http://github.com/errornot/ErrorNot
 
 Requirements
 ============
@@ -14,26 +14,37 @@ Requirements
 Usage
 =====
 
+You only want to notify some data:
+
 ::
 
         $errornot = new Services_ErrorNot('http://example.net/', 'my-api-key');
         $errornot->notify('big error');
         $errornot->notify('big error', '2010-03-03T00:00:42+01:00');
-        try 
-        {
+        $errornot->notify('big error', '2010-03-03T00:00:42+01:00', $mybacktrace, $myrequest, $myenvironnement, $mydata);
 
-        }
-        catch (MyException $e)
-        {
-           errornot->notifyException($e); // send specific exception
-           errornot->notifyException($e, 'foo'); // send specific exception with extra data
-        }       
-
-ErrorNot can install a custom exception handler:
+Notify exception:
 
 ::
 
-        $e = new Services_ErrorNot('http://example.net/', 'my-api-key', true);
+        try 
+        {
+            throw new MyException();
+        }
+        catch (MyException $e)
+        {
+           $errornot->notifyException($e); // send specific exception
+           $errornot->notifyException($e, 'foo'); // send specific exception with extra data
+        }       
+
+Exception Handler
+-----------------
+
+ErrorNot can also install a custom exception handler:
+
+::
+
+        $errornot = new Services_ErrorNot('http://example.net/', 'my-api-key', true); 
 
 Be carefull about exception handler.
 
@@ -41,6 +52,8 @@ If you call set_exception_handler after create errornot instance, you override
 previous exception_handler.
 
 ErrorNot will save your previous custom exception handler.
+
+The good way:
 
 ::
 
@@ -50,12 +63,26 @@ ErrorNot will save your previous custom exception handler.
         }
 
         set_exception_handler('my_exception_handler'); // ok
-        $e = new Services_ErrorNot('http://example.net/', 'my-api-key', true);
+        $errornot = new Services_ErrorNot('http://example.net/', 'my-api-key', true);
 
-        $e = new Services_ErrorNot('http://example.net/', 'my-api-key', true);
+The bad way:
+
+::
+
+        function my_exception_handler($e)
+        {
+            echo 'plop';
+        }
+
+        $errornot = new Services_ErrorNot('http://example.net/', 'my-api-key', true);
         set_exception_handler('my_exception_handler'); // not ok
 
-        $e->installExceptionHandler(); // or reinstall exception handler
+You can also reinstall errornot exception handler
+
+::
+
+        $errornot->installExceptionHandler();
+
 
 TESTS
 =====
