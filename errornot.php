@@ -88,7 +88,7 @@ class Services_ErrorNot
      * @param Date $raised_at UTC date
      * @param array $backtrace
      * @param array $request
-     * @param array $environnement
+     * @param array $environment
      * @param array $data
      * @return boolean
      */
