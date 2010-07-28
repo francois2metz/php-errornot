@@ -92,7 +92,7 @@ class Services_ErrorNot
      * @param array $data
      * @return boolean
      */
-    public function notify($message, $raised_at = null, $backtrace = array(), $request = null, $environnement = null, $data = null)
+    public function notify($message, $raised_at = null, $backtrace = array(), $request = null, $environment = null, $data = null)
     {
         $http_request = new HTTP_Request2($this->formatUrl() , HTTP_Request2::METHOD_POST);
         if (!is_null($this->adapter))
@@ -109,7 +109,7 @@ class Services_ErrorNot
                                                        'raised_at'   => $raised_at,
                                                        'backtrace'   => $backtrace,
                                                        'request'     => $request,
-                                                       'environment' => $environnement,
+                                                       'environment' => $environment,
                                                        'data'        => $data));
 
         try
