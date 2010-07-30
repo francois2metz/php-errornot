@@ -37,6 +37,20 @@ Notify exception:
            $errornot->notifyException($e, 'foo'); // send specific exception with extra data
         }       
 
+Non-blocking notifications
+--------------------------
+
+It is possible to perform non-blocking notifications. This means that ErrorNot client will not wait 
+for server response and therefore will not be affected if ErrorNot server is misbehaving.
+
+This can be achieved by using ``ErrorNotSocketNonBlockingHttpAdapter`` adapter.
+
+::
+        $errornot = new Services_ErrorNot('http://example.net/', 'my-api-key');
+        $errornot->setNetworkAdapter(new ErrorNotSocketNonBlockingHttpAdapter());
+        $errornot->notify('big error', '2010-03-03T00:00:42+01:00');
+
+
 Exception Handler
 -----------------
 
