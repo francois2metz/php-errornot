@@ -4,7 +4,7 @@
  * Copyright (C) 2010 François de Metz
  *
  * PHP version 5
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -114,8 +114,12 @@ class Services_ErrorNot
 
         try
         {
+            /*
+             * Test server response.
+             * Note : Response in null when using non-blocking notifier.
+             */
             $response = $http_request->send();
-            if ($response->getStatus() == 200)
+            if ($response instanceof HTTP_Request2_Response && $response->getStatus() == 200)
             {
                 return true;
             }
