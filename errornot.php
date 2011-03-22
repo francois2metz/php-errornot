@@ -36,6 +36,10 @@ class Services_ErrorNot
     protected $adapter = null;
 
     private $previous_exception_handler = null;
+    
+    public $timeout = 2;
+    
+    public $connect_timeout = 2;
 
     /**
      * Create a new notifier
@@ -94,7 +98,9 @@ class Services_ErrorNot
      */
     public function notify($message, $raised_at = null, $backtrace = array(), $request = null, $environment = null, $data = null)
     {
-        $http_request = new HTTP_Request2($this->formatUrl() , HTTP_Request2::METHOD_POST);
+        $http_request = new HTTP_Request2($this->formatUrl() , HTTP_Request2::METHOD_POST,
+                                          array('timeout' => $this->timeout,
+                                                'connect_timeout' => $this->connect_timeout));
         if (!is_null($this->adapter))
         {
             $http_request->setAdapter($this->adapter);
