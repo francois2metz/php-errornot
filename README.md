@@ -81,7 +81,7 @@ You can also reinstall errornot exception handler
 
 ## Tests
 
-* simpletest for launching tests (http://www.simpletest.org/)
+Simpletest for launching tests (http://www.simpletest.org/)
 
     $> git submodule update --init
     $> php tests/test_errornot.php
